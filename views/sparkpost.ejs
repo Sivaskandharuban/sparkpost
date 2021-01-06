@@ -1,0 +1,688 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+  integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+  crossorigin="anonymous"
+/>
+
+<!-- Icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="sparkpost.css">
+
+</head>
+  <body>
+    <div  class='row'>
+      <div class='col-md-2'></div>
+      <div class='col-md-8' id="mydiv"></div>
+      <div class='col-md-2'></div>
+    </div>
+
+    <script type="text/babel">
+	
+        function AddLogorow(abcd, second){
+          return (
+                <div class="e1logorowpadding epaddingbottom12">
+                    <div><img src='sparkpost-logo.png' width='120' height='31' /></div>
+                </div>);
+        }
+
+        function AddBackButton(page, btnclick, btnclass){
+          if(page>1){
+            return (
+                <button onClick={btnclick} class={btnclass}>Back</button>
+            );
+          } else{
+            return (
+                ""
+            );
+          }
+        }
+
+
+        function AddButtonBlock(cancelclick, nextclick, nextbtntext,btnclass,backclick, pageno){
+          return (
+            <div class='e1container'>
+                <div  class='row'>
+                    <div class='col-md-2 pull-left'><button onClick={cancelclick} class='btn btn-link e1cancelbuton float-left'>Cancel</button></div>
+                    <div class='col-md-7' id="mydiv"></div>
+                    <div class='col-md-3'>
+                        <button onClick={nextclick} class={btnclass}>{nextbtntext}</button>
+                        {AddBackButton(pageno, backclick, btnclass)}
+                    </div>
+                </div>
+            </div>
+          );
+        }
+
+        function getmarginWidth(step){
+          let margin="56%";
+          if(step==1){
+            margin="42%";
+          } else if(step==2){
+            margin="44%";
+          } else if(step==3){
+            margin="43%";
+          }
+          return margin;
+        }
+
+
+        function GetIcon(){
+          return(
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
+          );
+        }
+
+        function getDigitIcon(){
+          return (
+            <span class="badge">2</span>
+          );
+        }
+        function AsignDigitIcon(stepno, Status){
+          const mystyle = {
+            fontSize:15,
+            fontWeight: "700",
+            strokeWidth: 0
+          };
+          if(Status==false){
+            return (
+              <svg width="100" height="100">
+                  <circle cx="30" cy="24" r="6" stroke-width="4" fill="#fff" />
+                  <text x="30%" y="26%" dominant-baseline="middle"  text-anchor="middle" style={mystyle} class="polygonStyleUnselected">{stepno}</text>
+              </svg>
+            )
+          } else{
+            return (
+              ""
+            )
+          }
+        }
+
+        function getWidthSize(stepno){
+          if(stepno==1){
+            return "240"
+          } 
+          else if(stepno==2){
+            return "300";
+          } else if(stepno==3){
+            return "200";
+          }
+        }
+
+        function getSvgSize(stepno){
+          if(stepno==1){
+            return "202.5,25 182.5,51 0,51 0,25 0,0 182.5,0";
+            //return "240,25 220,51 37.5,51 37.5,25 37.5,0 220,0";
+            //return "240,25 220,51 18.5,51 37.5,25 18.5,0 220,0";
+          } else if(stepno==2){
+            return "265.5,25 242.5,51 0,51 19,25 0,0 242.5,0";
+            //return "220,25 200,51 18.5,51 37.5,25 18.5,0 200,0";
+          } else if(stepno==3){
+            return "185.5,25 162.5,51 0,51 19,25 0,0 162.5,0";
+            //return "200,25 180,51 18.5,51 37.5,25 18.5,0 180,0";
+          }
+        }
+
+        function GetIconSize(stepno){
+          if(stepno==1){
+            return "20"
+          } 
+          else if(stepno==2){
+            return "34";
+          } else if(stepno==3){
+            return "34";
+          }
+        }
+
+        
+        function SetSVGCLass(Status){
+          let SelectionClass="";
+          if(Status=="Previous"){
+            SelectionClass="polygonStyleCompleted";
+          } else if(Status=="Current"){
+            SelectionClass="polygonStyleStatndby";
+          } else if(Status=="Next"){
+            SelectionClass="polygonStyleUnselected";
+          }
+          return SelectionClass;
+        }
+
+
+        function SetStyleForWizardText(Status){
+          
+          if(Status=="Previous"){
+            const TextStyle={
+              fill: "#fff"
+            }
+            return TextStyle;
+          } else if(Status=="Current"){
+            const TextStyle={
+              fill: "#fff"
+            }
+            return TextStyle;
+          } else if(Status=="Next"){
+            const TextStyle={
+              fill: "black"
+            }
+            return TextStyle;
+          }
+        }
+
+        function DigitStyle(Status){
+          if(Status=="Previous"){
+            const mystyle = {
+            // fontSize:15,
+            fontWeight: "700",
+            strokeWidth: 0,
+            };
+            return mystyle;
+          } else if(Status=="Current"){
+            const mystyle = {
+            // fontSize:15,
+            fill: "#1E67B7",
+            fontWeight: "700",
+            strokeWidth: 0,
+            };
+            return mystyle;
+          } else if(Status=="Next"){
+            const mystyle = {
+            // fontSize:15,
+            // fill: "#black",
+            fontWeight: "700",
+            strokeWidth: 0,
+            };
+            return mystyle;
+          }
+        }
+
+        function GetWizardStep(labelname, stepno, Status, onClickHandler){
+          let marginLeft=getmarginWidth(stepno);
+          let SelectionClass=SetSVGCLass(Status);   //(Status==true)?"polygonStyleSelected":"polygonStyleUnselected";
+
+          
+
+          let pointerClass=(Status=="Previous")?"clsLink":"clsUnlink";
+          let svgPoints=getSvgSize(stepno)
+          let TotalWidth=getWidthSize(stepno);
+          let RoundedIconWidth=GetIconSize(stepno);
+          let RoundedIconWidthForText=RoundedIconWidth+"%";
+          let className="svgStyles "+"Div"+stepno + " " + pointerClass;
+          const mystyle = DigitStyle(Status);
+          
+          // {
+          //   // fontSize:15,
+          //   fontWeight: "700",
+          //   strokeWidth: 0,
+          // };
+
+         
+
+          const TextStyle=SetStyleForWizardText(Status);
+
+          if(Status=="Previous"){
+            return(
+              <svg name={stepno} height="75" width={TotalWidth} class={className} onClick={onClickHandler}>
+                <polygon points={svgPoints} class={SelectionClass}  />
+                <svg width="100" height="100">
+                    <text x={RoundedIconWidthForText} y="26%" dominant-baseline="middle"   text-anchor="middle"  class="iconStyle"> &#xf058; </text>
+                </svg>
+                
+                <text x={marginLeft} y="34%" dominant-baseline="middle" text-anchor="middle" style={TextStyle}  class="wizardTextStyle">   {labelname}</text>
+              </svg>
+            )
+          } else{
+            return(
+              <svg name={stepno}  height="75" width={TotalWidth} class={className} onClick={onClickHandler}>
+                <polygon points={svgPoints} class={SelectionClass}  />
+                <svg width="100" height="100">
+                    <circle cx={RoundedIconWidth} cy="24" r="8" stroke-width="4" style={TextStyle} />
+                    <text x={RoundedIconWidthForText} y="26%" dominant-baseline="middle"  text-anchor="middle" style={mystyle} class="polygonStyleUnselected">{stepno}</text>
+                </svg>
+                <g><text class="badge">CLICK ME</text></g>
+                <text x={marginLeft} y="34%" dominant-baseline="middle" text-anchor="middle" style={TextStyle}  class="wizardTextStyle"> {labelname}</text>
+            </svg>
+            )
+          }
+        }
+
+        function wizardNavigationNew(step, onchangeHandler){
+          //onclick={onClickHandler(stepno)}
+
+          if(step==1){
+            return (
+            <div class="wizard">
+              {GetWizardStep("ORG. PREFERENCES", 1, "Current", onchangeHandler)} 
+              {GetWizardStep("INBOX TRACKER CONFIG", 2, "Next", onchangeHandler)}
+              {GetWizardStep("SUMMARY", 3, "Next", onchangeHandler)}
+            </div>
+            );
+          } else if(step==2){
+            return (
+            <div class="wizard">
+              
+              {GetWizardStep("ORG. PREFERENCES", 1, "Previous", onchangeHandler)}
+              {GetWizardStep("INBOX TRACKER CONFIG", 2, "Current", onchangeHandler)}
+              {GetWizardStep("SUMMARY", 3, "Next", onchangeHandler)}
+            </div>
+            );
+          }else if(step==3){
+            return (
+            <div class="wizard">
+              
+              {GetWizardStep("ORG. PREFERENCES", 1, "Previous", onchangeHandler)}
+              {GetWizardStep("INBOX TRACKER CONFIG", 2, "Previous", onchangeHandler)}
+              {GetWizardStep("SUMMARY", 3, "Current", onchangeHandler)}
+            </div>
+            );
+          }
+          
+        }
+
+     class HearsayPage1 extends React.Component {
+        constructor(props) {
+          super(props);
+		  
+          this.state = {
+            groupname: '',
+            namex: '',
+            useridx:'',
+			
+			btn1data:'',
+			btn2data:'',
+			btn3data:'',
+			btn4data:'',
+			btn5data:'',
+			btn6data:'',
+
+            page:1,
+            };
+
+            
+          this.handleChangeBack = this.handleChangeBack.bind(this);  
+          this.handleChangeNext = this.handleChangeNext.bind(this);
+          this.handleChangeCancel = this.handleChangeCancel.bind(this);
+		  this.handleVerifyMyAccount = this.handleVerifyMyAccount.bind(this);
+		  this.handleThresholdRulesButtons = this.handleThresholdRulesButtons.bind(this);
+		  
+		  
+		  
+      this.redirectFromWizardSteps=this.redirectFromWizardSteps.bind(this);
+		  
+        }
+
+        componentDidMount() {
+
+        }
+
+        handleChangeCancel(event) {
+          alert('Cancel button clicked');
+        }
+
+
+        handleVerifyMyAccount(event) {
+          alert('Verify My Account button clicked');
+        }
+
+
+		handleThresholdRulesButtons = param => event => {
+			// param is the argument you passed to the function
+			// e is the event object that returned
+			if(param=="btn1data"){
+				this.setState({[param]: 'Input > X'});
+			}
+			else if(param=="btn2data"){
+				this.setState({[param]: 'Spam > X'});
+			}	
+			else if(param=="btn3data"){
+				this.setState({[param]: 'SPF Results'});
+			}	
+			else if(param=="btn4data"){
+				this.setState({[param]: 'DKIM Results'});
+			}	
+			else if(param=="btn5data"){
+				this.setState({[param]: 'Min. Volume'});
+			}	
+			else if(param=="btn6data"){
+				this.setState({[param]: 'Campaign Minimum'});
+			}	
+			
+			
+			
+		};
+	
+
+
+        
+
+
+
+        handleChangeBack(event){
+          let ipage = this.state.page - 1;
+		  if(ipage<=0){ipage=1;}
+          this.setState({page: ipage});
+        }
+
+        handleChangeNext(event) {
+          
+          if(this.state.page==3){
+             
+          }
+
+          //Validation
+           
+          var ValidationStatus=true;
+          var validateMessages=[];
+
+          if(this.state.page==1){
+		  
+		  
+            if(this.state.groupname=="" || this.state.groupname==null || this.state.groupname==" "){
+            ValidationStatus=false;
+                ReactDOM.render(<p style={{color: "red" }}>Group Name is mandatory.</p>, document.getElementById('valMsggroupname'));
+            } else{
+                ReactDOM.render(<p> </p>, document.getElementById('valMsggroupname'));
+            }
+
+            if(this.state.namex=="" || this.state.namex==" "){
+              ValidationStatus=false;
+              ReactDOM.render(<p style={{color: "red"}}>Name is mandatory.</p>, document.getElementById('valMsgnamex'));
+            } else{
+              ReactDOM.render(<p></p>, document.getElementById('valMsgnamex'));
+            }
+            if(this.state.useridx=="" || this.state.useridx==" "){
+              ValidationStatus=false;
+              ReactDOM.render(<p style={{color: "red"}}>User ID is mandatory.</p>, document.getElementById('valMsguseridx'));
+            } else{
+              ReactDOM.render(<p></p>, document.getElementById('valMsguseridx'));
+            }			
+
+			
+          } 
+		  
+          if(ValidationStatus==true){
+            let ipage = this.state.page + 1;
+            if(ipage==4){
+              //reset to first page
+              ipage=1;
+              //reset all values
+              this.setState({groupname: ''});
+              this.setState({namex: ''});
+			  this.setState({useridx: ''});
+			  
+			  this.setState({btn1data: ''});
+			  this.setState({btn2data: ''});
+			  this.setState({btn3data: ''});
+			  this.setState({btn4data: ''});
+			  this.setState({btn5data: ''});
+			  this.setState({btn6data: ''});
+		
+		    }
+            this.setState({page: ipage});
+          }
+        }
+
+
+		
+
+        myChangeHandler = (event) => {
+          let nam = event.target.name;
+          let val = event.target.value;
+
+          //alert(nam + '--' + val);
+          //alert(this.state.temp5 + '--name: ' + nam + 'value-> ' + val);
+          this.setState({[nam]: val});
+
+          if(nam=="groupname"){
+            ReactDOM.render(<p></p>, document.getElementById('valMsggroupname'));
+          }
+          if(nam=="useridx"){
+            ReactDOM.render(<p></p>, document.getElementById('valMsguseridx'));
+          }
+          if(nam=="namex"){
+            ReactDOM.render(<p></p>, document.getElementById('valMsgnamex'));
+          }		  
+
+       }
+
+        redirectFromWizardSteps(event){
+          let Clsname = event.currentTarget.classList[1];
+          const CurrentPageNo=this.state.page;
+          var RedirectingPageNo=0;
+          if(Clsname=="Div1"){
+            RedirectingPageNo=1;
+          } else if(Clsname=="Div2"){
+            RedirectingPageNo=2;
+          } else if(Clsname=="Div3"){
+            RedirectingPageNo=3;
+          }
+
+          if(RedirectingPageNo<=CurrentPageNo){
+            this.setState({page:RedirectingPageNo});
+          }
+          
+        }
+
+
+        render() {
+          if(this.state.page==1) {
+            return (
+              <div>
+                  
+				{wizardNavigationNew(1, this.redirectFromWizardSteps)}
+                {AddLogorow()}
+                <div class='e1container'>
+                    <div class="row epaddingbottom10">
+                        <div class="col-md-11 elRowPg1">
+                            <label class='e1labelheaderPage1 e1margintop10'>Group Name</label>
+                            <input name='groupname' value={this.state.groupname} placeholder='Enter Group Name' class='e1inputpg1' maxlength='40' onChange={this.myChangeHandler} />
+                            <span id="valMsggroupname"></span>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                  
+                    <hr class='e1linecolor'/>
+					<div class="row">
+                        <div class="col-md-11 elRowPg1">
+                            <label class='e1labelheaderPage1'>Sparkpost SSO Dashboard Access </label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div> 
+					
+					<div class="row epaddingbottom10">
+                        <div class="col-md-5 elRowPg1">
+                            <label class='e1labelheaderPage1 e1margintop10'>Name</label>
+                            <input name='namex' value={this.state.namex} placeholder='Enter Name' class='e1inputpg1' maxlength='40' onChange={this.myChangeHandler} />
+                            <span id="valMsgnamex"></span>
+                        </div>
+                        <div class="col-md-5 elRowPg1">
+                            <label class='e1labelheaderPage1 e1margintop10'>User ID</label>
+                            <input name='useridx' value={this.state.useridx} placeholder='Enter User ID' class='e1inputpg1' maxlength='40' onChange={this.myChangeHandler} />
+                            <span id="valMsguseridx"></span>
+                        </div>						
+                        <div class="col-md-2"></div>
+                    </div>
+					<div class="row epaddingbottom10">
+                        <div class="col-md-5 elRowPg1">
+                        </div>
+                        <div class="col-md-5 elRowPg1">
+                            <button onClick={this.handleVerifyMyAccount} class='btn btn-default btn-xs float-right e1buttonleftpadding verifybtn'>Verify My Account</button>
+                        </div>						
+                        <div class="col-md-2"></div>
+                    </div>					
+					
+					
+                    <hr class='e1linecolor'/>
+                </div>
+                {AddButtonBlock(this.handleChangeCancel,this.handleChangeNext,'Next','btn btn-primary btn-xs float-right e1buttonleftpadding',this.handleChangeBack, this.state.page)}
+              </div>
+            )
+          }
+          else if(this.state.page==2) {
+            return (
+              <div>
+                {wizardNavigationNew(2, this.redirectFromWizardSteps)}
+                {AddLogorow()}
+                <div class='e1container'>
+                    <div class="row epaddingbottom10">
+                        <div class="col-md-11 elRowPg1">
+                            <label class='e1labelheaderPage1 e1margintop10'>MY COMPANY <span class='inboxtracker'>Inbox Tracker</span></label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+					<div class="row">
+					
+                        <div class="col-md-11 elRowPg1">
+                            <label class='e1labelheaderPage1'>Thresholds </label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div> 
+					<div class="row epaddingbottom10  paddingleft60">
+							<div class='displaystyle1 col-md-6'>
+								<div class="row">
+									<div class=' col-md-3'>
+										<div class=""><label class='e1labelheaderPage4'>Inbox > ""</label></div>
+										<div class=""><a name='btn1data' onClick={this.handleThresholdRulesButtons('btn1data')}><img class='thresbtns' src='btn1.jpg'/></a></div>
+									</div>
+									<div class=' col-md-3'>
+										<div class=""><label class='e1labelheaderPage4'>Spam > ""</label></div>
+										<div class=""><a name='btn2data' onClick={this.handleThresholdRulesButtons('btn2data')}><img class='thresbtns' src='btn2.jpg'/></a></div>
+									</div>
+									<div class=' col-md-3'>
+										<div class=""><label class='e1labelheaderPage4'>SPF Results</label></div>
+										<div class=""><a  name='btn3data' onClick={this.handleThresholdRulesButtons('btn3data')}><img class='thresbtns' src='btn3.jpg'/></a></div>
+									</div>
+									<div class=' col-md-3'>
+										<div class=""><label class='e1labelheaderPage4'>DKIM Results</label></div>
+										<div class=""><a name='btn4data' onClick={this.handleThresholdRulesButtons('btn4data')}><img class='thresbtns' src='btn4.jpg'/></a></div>
+									</div>																					
+								</div>
+
+							</div>
+							<div class=' col-md-6'>
+						</div>							
+                    </div> 
+					<hr class='e1linecolor'/>
+					<div class="row">
+                        <div class="col-md-11 elRowPg1">
+                            <label class='e1labelheaderPage1'>Rules </label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div> 
+					<div class="row epaddingbottom10  paddingleft60">
+							<div class='displaystyle1 col-md-6'>
+								<div class="row">
+									<div class=' col-md-3'>
+										<div class=""><label class='e1labelheaderPage4'>Min. Volume</label></div>
+										<div class=""><a name='btn5data' onClick={this.handleThresholdRulesButtons('btn5data')}><img class='thresbtns' src='btn5.jpg'/></a></div>
+									</div>
+									<div class=' col-md-3'>
+										<div class=""><label class='e1labelheaderPage4'>Campaign Min.</label></div>
+										<div class=""><a name='btn6data' onClick={this.handleThresholdRulesButtons('btn6data')}><img class='thresbtns' src='btn6.jpg'/></a></div>
+									</div>
+									<div class=' col-md-3'>
+									</div>
+									<div class=' col-md-3'>
+									</div>																					
+								</div>
+
+							</div>
+							<div class=' col-md-6'>
+						</div>							
+                    </div> 
+				
+                </div>
+                {AddButtonBlock(this.handleChangeCancel,this.handleChangeNext,'Next','btn btn-primary btn-xs float-right e1buttonleftpadding',this.handleChangeBack, this.state.page)}
+              </div>
+            )
+          }
+          else if(this.state.page==3) {
+            return (
+              <div>
+                {wizardNavigationNew(3, this.redirectFromWizardSteps)}
+                {AddLogorow()}
+                <div class='e1container'>
+                    <div class="row epaddingbottom10 e1marginleft emargintop10">
+                        <div class="col-md-11">
+                            <label class='e1labelheaderPage3'>SETUP SUMMARY</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row e1marginleft">
+						<div class="col-md-11 ">
+                            <label class='e1labelheaderPage3'>Group Name</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row epaddingbottom12 e1marginleft">
+						<div class="col-md-11 ">
+                            <label>{this.state.groupname}</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>	
+				    <div class="row e1marginleft">
+						<div class="col-md-11 ">
+                            <label class='e1labelheaderPage3'>SSO ACCESS</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+					<div class="row e1marginleft">
+						<div class="col-md-11 ">
+                            <label>STATUS: Active</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>	
+					<div class="row e1marginleft">
+						<div class="col-md-11 ">
+                            <label>NAME: {this.state.namex}</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>	
+					<div class="row e1marginleft epaddingbottom12">
+						<div class="col-md-11 ">
+                            <label >USER ID: {this.state.useridx}</label>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>	
+					<div class="row e1marginleft">
+						<div class="col-md-5 ">
+                            <label class='e1labelheaderPage3'>THRESHOLDS</label><br/>
+                        </div>
+						<div class="col-md-6 ">
+                            <label class='e1labelheaderPage3'>RULES</label><br/>
+                        </div>						
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row epaddingbottom10 e1marginleft">
+						<div class="col-md-5 ">
+								<div>{this.state.btn1data} </div>
+								<div>{this.state.btn2data} </div>
+								<div>{this.state.btn3data} </div>
+								<div>{this.state.btn4data} </div>
+                        </div>
+						<div class="col-md-6 ">
+								<div>{this.state.btn5data} </div>
+								<div>{this.state.btn6data} </div>
+                        </div>						
+                        <div class="col-md-1"></div>
+                    </div>
+					
+					
+                </div>
+                {AddButtonBlock(this.handleChangeCancel,this.handleChangeNext,'Done','btn btn-primary btn-xs float-right e1buttonleftpadding',this.handleChangeBack, this.state.page)}
+              </div>
+            )
+          }          
+        }
+      }
+
+      ReactDOM.render(<HearsayPage1 />, document.getElementById('mydiv'))
+    </script>
+  </body>
+</html>
