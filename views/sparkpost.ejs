@@ -5,6 +5,10 @@
   <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" 
+  integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" 
+  crossorigin="anonymous">
+  </script>
   <link
   rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -327,8 +331,7 @@
 
 
         handleVerifyMyAccount(event) {
-	debugger;
-          let _data = {
+          /*let _data = {
               title: "foo",
               body: "bar", 
               userId:1
@@ -341,9 +344,17 @@
             })
             .then(response => response.json()) 
             .then(json => console.log(json))
-            .catch(err => console.log(err));
-
-            //alert('Verify My Account button clicked');
+            .catch(err => console.log(err));*/
+            axios({
+			          method: 'POST',
+			          url: 'https://sparkpost-mc.herokuapp.com/sparkpostverify', 
+			          
+			          //headers: {'Content-Type': 'application/json' }
+                })
+                  .then(function (response) {		 
+                    console.log('log++'+JSON.stringify(response));
+                  });
+            alert('Verify My Account button clicked');
         }
 
 
