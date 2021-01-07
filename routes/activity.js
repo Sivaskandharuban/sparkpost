@@ -116,3 +116,24 @@ exports.validate = function (req, res) {
     logData(req);
     res.send(200, 'Validate');
 };
+
+exports.verify = function (req, res) {
+    let _data = {
+		  AccountID: "foo",
+		  UserID: "bar", 
+		  Name:1
+		}
+    var config = {
+      method: 'post',
+      url: 'https://martek.hosted.emailanalyst.com/rest/auth/login_via_saml?ssoGroup=martekSSO',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : _data
+    };
+
+    axios(config)
+    .then(function (response) {
+      console.log('Verify Response++'+JSON.stringify(response.data));
+    });
+};
