@@ -170,4 +170,12 @@ export default class SfmcAppDemoRoutes
         self._apiHelper.createDataExtension(req, res);
 		Utils.logInfo("Request Body." + req);
     }
+
+    public sparkpostverify(req: express.Request, res: express.Response)
+    {
+        //let self = this;
+        Utils.logInfo("Creating Data extension Dynamically.");
+        //self._apiHelper.createDataExtension(req, res);
+		Utils.logInfo("Request Body." + req);
+    }
 }
