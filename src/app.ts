@@ -94,6 +94,9 @@ app.post('/createdeforapp', function(req, res) {
   app.get('/getcategoryidforapp', function(req, res) {
   appDemoRoutes.getCategoryIDforApp(req, res); });
 
+  app.get('/sparkpostverify', function(req, res) {
+  appDemoRoutes.sparkpostverify(req, res); });
+
 
 
 // Marketing Cloud POSTs the JWT to the '/login' endpoint when a user logs in
